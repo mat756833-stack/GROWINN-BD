@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Investment Portal</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      font-family: "Segoe UI", sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between; /* লেখাগুলো উপর–মাঝে–নিচে ভাগ হবে */
+      align-items: center;
+      text-align: center;
+      color: white;
+      background: linear-gradient(270deg, #ff6ec7, #6ec6ff, #42f587, #f5e642);
+      background-size: 800% 800%;
+      animation: gradientShift 15s ease infinite;
+    }
+
+    @keyframes gradientShift {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+
+    h4 {
+      margin-top: 25px;
+      font-size: 22px;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    h2 {
+      font-size: 18px;
+      margin: 20px 0;
+      color: #fff;
+    }
+
+    h3 {
+      font-size: 20px;
+      margin: 10px 0;
+      color: #fff;
+    }
+
+    /* নিচের বাটন কন্টেইনার */
+    .btn-container {
+      margin-bottom: 40px; /* সব ডিভাইসে নিচে থাকবে */
+    }
+
+    .btn {
+      display: inline-block;
+      margin: 10px;
+      padding: 12px 30px;
+      font-size: 18px;
+      color: white;
+      background: #111;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: 0.3s;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      background: #ff6ec7;
+      transform: scale(1.1);
+    }
+  </style>
+</head>
+<body>
+  <h4>আমাদের সাথে যোগ দিয়ে অল্প অল্প ইনভেস্ট করে নিরাপদ মুনাফা অর্জন করুন</h4>
+
+  <div>
+    <h2>একাউন্ট খুলে আমাদের ব্যবসার পার্টনার আপনিও হতে পারবেন</h2>
+    <h3>সঠিক ভাবে একাউন্ট খুলুন</h3>
+  </div>
+
+  <div class="btn-container">
+    <a href="login.html" class="btn">লগইন</a>
+    <a href="register.html" class="btn">রেজিস্ট্রেশন</a>
+  </div>
+</body>
+</html>
