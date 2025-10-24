@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deposit - Investment Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 28px;
+        }
+
+        .btn-back {
+            padding: 10px 20px;
+            background: #f0f0f0;
+            color: #333;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-back:hover {
+            background: #e0e0e0;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .card h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 20px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .form-group select:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .plan-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .plan-info.show {
+            display: block;
+        }
+
+        .plan-info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .plan-info-item:last-child {
+            border-bottom: none;
+        }
+
+        .plan-info-item label {
+            color: #666;
+            font-weight: 600;
+        }
+
+        .plan-info-item .value {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-upload input[type="file"] {
+            display: none;
+        }
+
+        .file-upload-label {
+            display: block;
+            padding: 20px;
+            background: #f8f9fa;
+            border: 2px dashed #667eea;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload-label:hover {
+            background: #f0f0f0;
+            border-color: #764ba2;
+        }
+
+        .file-upload-label.active {
+            background: #e8eaf6;
+            border-color: #667eea;
+        }
+
+        .file-name {
+            color: #667eea;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .error.show {
+            display: block;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .success.show {
+            display: block;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .plan-option {
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .plan-option:hover {
+            border-color: #667eea;
+            background: #f8f9fa;
+        }
+
+        .plan-option.selected {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .plan-option .amount {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .plan-option .currency {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .plans-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Make a Deposit</h1>
+            <button class="btn-back" onclick="goBack()">Back to Dashboard</button>
+        </div>
+
+        <div id="errorMessage" class="error"></div>
+        <div id="successMessage" class="success"></div>
+
+        <div class="card">
+            <h2>Select Investment Plan</h2>
+            <div class="plans-grid" id="plansGrid"></div>
+        </div>
+
+        <div class="card">
+            <h2>Plan Details</h2>
+            <form id="depositForm">
+                <div class="form-group">
+                    <label>Selected Plan Amount</label>
+                    <input type="text" id="planAmount" readonly>
+                </div>
+
+                <div class="plan-info" id="planInfo">
+                    <div class="plan-info-item">
+                        <label>Daily Profit (12%)</label>
+                        <span class="value">৳ <span id="dailyProfitAmount">0</span></span>
+                    </div>
+                    <div class="plan-info-item">
+                        <label>Monthly Profit (30 days)</label>
+                        <span class="value">৳ <span id="monthlyProfitAmount">0</span></span>
+                    </div>
+                    <div class="plan-info-item">
+                        <label>Total After 30 Days</label>
+                        <span class="value">৳ <span id="totalAfterAmount">0</span></span>
+                    </div>
+                    <div class="plan-info-item">
+                        <label>Referral Bonus (18%)</label>
+                        <span class="value">৳ <span id="referralBonusAmount">0</span></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Upload Payment Screenshot</label>
+                    <div class="file-upload">
+                        <input type="file" id="screenshotInput" accept="image/*" required>
+                        <label for="screenshotInput" class="file-upload-label">
+                            <div>Click to upload or drag and drop</div>
+                            <div style="font-size: 12px; color: #999; margin-top: 5px;">PNG, JPG, GIF up to 10MB</div>
+                            <div class="file-name" id="fileName"></div>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Submit Deposit Request</button>
+                <div class="loading" id="loading">Processing...</div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module">
+        import { getCurrentUser, uploadScreenshot, createPaymentRequest } from './firebase-client.js';
+
+        const PLANS = [1250, 2100, 4000, 7000, 9000, 16500, 25000, 40000, 60000, 99000, 150000, 200000];
+        const DAILY_PROFIT_PERCENT = 0.12; // 12% per day
+        const REFERRAL_BONUS_PERCENT = 0.18; // 18%
+        const PLAN_DURATION = 30; // days
+
+        let currentUser = null;
+        let selectedPlan = null;
+        let selectedFile = null;
+
+        // Initialize
+        async function init() {
+            currentUser = await getCurrentUser();
+            if (!currentUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            renderPlans();
+            setupFileUpload();
+            setupFormSubmit();
+        }
+
+        function renderPlans() {
+            const grid = document.getElementById('plansGrid');
+            grid.innerHTML = '';
+
+            PLANS.forEach(plan => {
+                const div = document.createElement('div');
+                div.className = 'plan-option';
+                div.innerHTML = `
+                    <div class="amount">৳ ${plan.toLocaleString()}</div>
+                    <div class="currency">BDT</div>
+                `;
+                div.onclick = () => selectPlan(plan, div);
+                grid.appendChild(div);
+            });
+        }
+
+        function selectPlan(amount, element) {
+            // Remove previous selection
+            document.querySelectorAll('.plan-option').forEach(el => el.classList.remove('selected'));
+            element.classList.add('selected');
+
+            selectedPlan = amount;
+            document.getElementById('planAmount').value = `৳ ${amount.toLocaleString()}`;
+
+            // Calculate profits
+            const dailyProfit = amount * DAILY_PROFIT_PERCENT;
+            const monthlyProfit = dailyProfit * PLAN_DURATION;
+            const totalAfter = amount + monthlyProfit;
+            const referralBonus = amount * REFERRAL_BONUS_PERCENT;
+
+            document.getElementById('dailyProfitAmount').textContent = dailyProfit.toLocaleString();
+            document.getElementById('monthlyProfitAmount').textContent = monthlyProfit.toLocaleString();
+            document.getElementById('totalAfterAmount').textContent = totalAfter.toLocaleString();
+            document.getElementById('referralBonusAmount').textContent = referralBonus.toLocaleString();
+
+            document.getElementById('planInfo').classList.add('show');
+        }
+
+        function setupFileUpload() {
+            const input = document.getElementById('screenshotInput');
+            const label = document.querySelector('.file-upload-label');
+
+            input.addEventListener('change', (e) => {
+                selectedFile = e.target.files[0];
+                if (selectedFile) {
+                    document.getElementById('fileName').textContent = selectedFile.name;
+                    label.classList.add('active');
+                }
+            });
+
+            // Drag and drop
+            label.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                label.classList.add('active');
+            });
+
+            label.addEventListener('dragleave', () => {
+                label.classList.remove('active');
+            });
+
+            label.addEventListener('drop', (e) => {
+                e.preventDefault();
+                selectedFile = e.dataTransfer.files[0];
+                if (selectedFile) {
+                    document.getElementById('fileName').textContent = selectedFile.name;
+                    label.classList.add('active');
+                }
+            });
+        }
+
+        function setupFormSubmit() {
+            document.getElementById('depositForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                if (!selectedPlan) {
+                    showError('Please select a plan');
+                    return;
+                }
+
+                if (!selectedFile) {
+                    showError('Please upload a screenshot');
+                    return;
+                }
+
+                await submitDeposit();
+            });
+        }
+
+        async function submitDeposit() {
+            const loading = document.getElementById('loading');
+            loading.classList.add('show');
+
+            try {
+                // Upload screenshot
+                const uploadResult = await uploadScreenshot(selectedFile, currentUser.uid);
+                if (!uploadResult.success) {
+                    showError('Failed to upload screenshot: ' + uploadResult.error);
+                    loading.classList.remove('show');
+                    return;
+                }
+
+                // Calculate daily profit
+                const dailyProfit = selectedPlan * DAILY_PROFIT_PERCENT;
+
+                // Create payment request
+                const result = await createPaymentRequest(
+                    currentUser.uid,
+                    selectedPlan,
+                    `৳ ${selectedPlan.toLocaleString()}`,
+                    dailyProfit,
+                    uploadResult.url
+                );
+
+                if (result.success) {
+                    showSuccess('Deposit request submitted successfully! Admin will review within 24 hours.');
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 2000);
+                } else {
+                    showError('Failed to create deposit request: ' + result.error);
+                }
+            } catch (error) {
+                showError('Error: ' + error.message);
+            } finally {
+                loading.classList.remove('show');
+            }
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.classList.add('show');
+            setTimeout(() => errorDiv.classList.remove('show'), 5000);
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.textContent = message;
+            successDiv.classList.add('show');
+        }
+
+        window.goBack = function() {
+            window.location.href = 'dashboard.html';
+        };
+
+        init();
+    </script>
+</body>
+</html>

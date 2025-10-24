@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Investment Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 28px;
+        }
+
+        .btn-logout {
+            padding: 10px 20px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-logout:hover {
+            background: #ff5252;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background: #f0f0f0;
+            color: #333;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .card h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 20px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .search-box button {
+            padding: 12px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .search-box button:hover {
+            background: #764ba2;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .table th {
+            background: #f8f9fa;
+            padding: 12px;
+            text-align: left;
+            color: #666;
+            font-weight: 600;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .table td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            color: #333;
+        }
+
+        .table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-approved {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-rejected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 5px;
+        }
+
+        .btn-approve {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-approve:hover {
+            background: #218838;
+        }
+
+        .btn-reject {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-reject:hover {
+            background: #c82333;
+        }
+
+        .btn-view {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-view:hover {
+            background: #764ba2;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .user-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .user-info.show {
+            display: block;
+        }
+
+        .user-info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .user-info-item:last-child {
+            border-bottom: none;
+        }
+
+        .user-info-item label {
+            color: #666;
+            font-weight: 600;
+        }
+
+        .user-info-item .value {
+            color: #333;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .error.show {
+            display: block;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .success.show {
+            display: block;
+        }
+
+        .screenshot-preview {
+            max-width: 300px;
+            max-height: 300px;
+            margin-top: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal.show {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-close {
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .modal-close:hover {
+            color: #333;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .tabs {
+                flex-wrap: wrap;
+            }
+
+            .table {
+                font-size: 12px;
+            }
+
+            .table th, .table td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Admin Panel</h1>
+            <button class="btn-logout" onclick="logout()">Logout</button>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('pending')">Pending Payments</button>
+            <button class="tab-btn" onclick="switchTab('search')">Search User</button>
+        </div>
+
+        <div id="errorMessage" class="error"></div>
+        <div id="successMessage" class="success"></div>
+
+        <!-- Pending Payments Tab -->
+        <div id="pending" class="tab-content active">
+            <div class="card">
+                <h2>Pending Payment Requests</h2>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>User Name</th>
+                            <th>Amount</th>
+                            <th>Plan</th>
+                            <th>Date</th>
+                            <th>Screenshot</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pendingTable">
+                        <tr>
+                            <td colspan="6" style="text-align: center; color: #999;">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Search User Tab -->
+        <div id="search" class="tab-content">
+            <div class="card">
+                <h2>Search User</h2>
+                <div class="search-box">
+                    <input type="text" id="searchUID" placeholder="Enter User UID">
+                    <button onclick="searchUser()">Search</button>
+                </div>
+
+                <div class="user-info" id="userInfo">
+                    <div class="user-info-item">
+                        <label>Name</label>
+                        <span class="value" id="userName">-</span>
+                    </div>
+                    <div class="user-info-item">
+                        <label>Email</label>
+                        <span class="value" id="userEmail">-</span>
+                    </div>
+                    <div class="user-info-item">
+                        <label>Phone</label>
+                        <span class="value" id="userPhone">-</span>
+                    </div>
+                    <div class="user-info-item">
+                        <label>Current Balance</label>
+                        <span class="value">৳ <span id="userBalance">0</span></span>
+                    </div>
+                    <div class="user-info-item">
+                        <label>Total Deposits</label>
+                        <span class="value">৳ <span id="userDeposits">0</span></span>
+                    </div>
+                </div>
+
+                <div id="balanceEditForm" style="display: none;">
+                    <h3 style="margin-bottom: 15px;">Edit Balance</h3>
+                    <div class="form-group">
+                        <label>New Balance</label>
+                        <input type="number" id="newBalance" placeholder="Enter new balance">
+                    </div>
+                    <button class="btn" onclick="updateBalance()">Update Balance</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Screenshot Modal -->
+    <div id="screenshotModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal()">&times;</span>
+            <img id="screenshotImage" src="/placeholder.svg" alt="Screenshot" style="width: 100%; border-radius: 5px;">
+        </div>
+    </div>
+
+    <script type="module">
+        import { getCurrentUser, isUserAdmin, getPendingPaymentRequests, getUserByUID, updateUserBalance, approvePaymentRequest, rejectPaymentRequest, logoutUser, getUserData } from './firebase-client.js';
+
+        let currentUser = null;
+        let selectedRequestId = null;
+        let selectedUserId = null;
+
+        // Initialize
+        async function init() {
+            currentUser = await getCurrentUser();
+            if (!currentUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const isAdmin = await isUserAdmin(currentUser.uid);
+            if (!isAdmin) {
+                alert('Access Denied: You are not an admin');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            loadPendingPayments();
+        }
+
+        async function loadPendingPayments() {
+            try {
+                const result = await getPendingPaymentRequests();
+                if (result.success) {
+                    const tbody = document.getElementById('pendingTable');
+                    tbody.innerHTML = '';
+
+                    if (result.data.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #999;">No pending payments</td></tr>';
+                        return;
+                    }
+
+                    for (const request of result.data) {
+                        const userData = await getUserByUID(request.uid);
+                        const date = new Date(request.createdAt.seconds * 1000).toLocaleDateString();
+                        const row = `
+                            <tr>
+                                <td>${userData.success ? userData.data.name : 'Unknown'}</td>
+                                <td>৳ ${request.amount.toLocaleString()}</td>
+                                <td>${request.plan}</td>
+                                <td>${date}</td>
+                                <td><img src="${request.screenshotURL}" alt="Screenshot" class="screenshot-preview" onclick="viewScreenshot('${request.screenshotURL}')"></td>
+                                <td>
+                                    <button class="btn-small btn-approve" onclick="approveRequest('${request.id}', '${request.uid}', ${request.amount}, '${userData.data?.referredBy || 'null'}')">Approve</button>
+                                    <button class="btn-small btn-reject" onclick="rejectRequest('${request.id}')">Reject</button>
+                                </td>
+                            </tr>
+                        `;
+                        tbody.innerHTML += row;
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading pending payments:', error);
+                showError('Error loading pending payments');
+            }
+        }
+
+        async function searchUser() {
+            const uid = document.getElementById('searchUID').value.trim();
+            if (!uid) {
+                showError('Please enter a UID');
+                return;
+            }
+
+            try {
+                const result = await getUserByUID(uid);
+                if (result.success) {
+                    selectedUserId = uid;
+                    document.getElementById('userName').textContent = result.data.name;
+                    document.getElementById('userEmail').textContent = result.data.email;
+                    document.getElementById('userPhone').textContent = result.data.phone || '-';
+                    document.getElementById('userBalance').textContent = (result.data.balance || 0).toLocaleString();
+                    document.getElementById('userDeposits').textContent = (result.data.totalDeposits || 0).toLocaleString();
+                    document.getElementById('userInfo').classList.add('show');
+                    document.getElementById('balanceEditForm').style.display = 'block';
+                    document.getElementById('newBalance').value = result.data.balance || 0;
+                } else {
+                    showError('User not found');
+                    document.getElementById('userInfo').classList.remove('show');
+                    document.getElementById('balanceEditForm').style.display = 'none';
+                }
+            } catch (error) {
+                showError('Error searching user: ' + error.message);
+            }
+        }
+
+        async function updateBalance() {
+            if (!selectedUserId) {
+                showError('Please search for a user first');
+                return;
+            }
+
+            const newBalance = parseFloat(document.getElementById('newBalance').value);
+            if (isNaN(newBalance) || newBalance < 0) {
+                showError('Please enter a valid balance');
+                return;
+            }
+
+            try {
+                const result = await updateUserBalance(selectedUserId, newBalance);
+                if (result.success) {
+                    showSuccess('Balance updated successfully');
+                    document.getElementById('userBalance').textContent = newBalance.toLocaleString();
+                } else {
+                    showError('Error updating balance: ' + result.error);
+                }
+            } catch (error) {
+                showError('Error: ' + error.message);
+            }
+        }
+
+        async function approveRequest(requestId, uid, amount, referredBy) {
+            if (!confirm('Approve this payment request?')) return;
+
+            try {
+                const referredByValue = referredBy === 'null' ? null : referredBy;
+                const result = await approvePaymentRequest(requestId, uid, amount, referredByValue);
+                if (result.success) {
+                    showSuccess('Payment approved successfully');
+                    loadPendingPayments();
+                } else {
+                    showError('Error approving payment: ' + result.error);
+                }
+            } catch (error) {
+                showError('Error: ' + error.message);
+            }
+        }
+
+        async function rejectRequest(requestId) {
+            if (!confirm('Reject this payment request?')) return;
+
+            try {
+                const result = await rejectPaymentRequest(requestId);
+                if (result.success) {
+                    showSuccess('Payment rejected successfully');
+                    loadPendingPayments();
+                } else {
+                    showError('Error rejecting payment: ' + result.error);
+                }
+            } catch (error) {
+                showError('Error: ' + error.message);
+            }
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.classList.add('show');
+            setTimeout(() => errorDiv.classList.remove('show'), 5000);
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.textContent = message;
+            successDiv.classList.add('show');
+            setTimeout(() => successDiv.classList.remove('show'), 5000);
+        }
+
+        window.switchTab = function(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        };
+
+        window.viewScreenshot = function(url) {
+            document.getElementById('screenshotImage').src = url;
+            document.getElementById('screenshotModal').classList.add('show');
+        };
+
+        window.closeModal = function() {
+            document.getElementById('screenshotModal').classList.remove('show');
+        };
+
+        window.logout = async function() {
+            const result = await logoutUser();
+            if (result.success) {
+                window.location.href = 'login.html';
+            }
+        };
+
+        init();
+    </script>
+</body>
+</html>
